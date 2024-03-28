@@ -11,6 +11,21 @@ CREATE TABLE account (
     level INT
 );
 
+CREATE TABLE office (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255),
+    address VARCHAR(255),
+    region VARCHAR(255)
+);
+
+CREATE TABLE account_office (
+    account_id INT,
+    office_id INT,
+    PRIMARY KEY (account_id, office_id),
+    FOREIGN KEY (account_id) REFERENCES account(id) ON DELETE CASCADE,
+    FOREIGN KEY (office_id) REFERENCES office(id) ON DELETE CASCADE
+);
+
 
 INSERT INTO account (email, username, password, first_name, last_name, dob, level)
 VALUES
@@ -34,3 +49,20 @@ VALUES
     ('email18@example.com', 'username18', 'password18', 'First18', 'Last18', '2000-01-18', 18),
     ('email19@example.com', 'username19', 'password19', 'First19', 'Last19', '2000-01-19', 19),
     ('email20@example.com', 'username20', 'password20', 'First20', 'Last20', '2000-01-20', 20);
+   
+ INSERT INTO office (name, address, region) 
+ VALUES
+	('Office 1', '123 Main St', 'North'),
+	('Office 2', '456 Elm St', 'South'),
+	('Office 3', '789 Oak St', 'East'),
+	('Office 4', '101 Pine St', 'West'),
+	('Office 5', '202 Maple St', 'Central');
+
+
+INSERT INTO account_office (account_id, office_id)
+SELECT account.id, office.id
+FROM account
+CROSS JOIN office
+ORDER BY RANDOM()
+LIMIT (FLOOR(RANDOM() * 2) + 2);
+
